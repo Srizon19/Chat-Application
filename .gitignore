@@ -1,0 +1,7 @@
+# Ignore environment variables and secrets
+.env
+*.env
+*.json
+
+# Ignore node modules
+node_modules/
