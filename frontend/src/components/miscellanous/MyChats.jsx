@@ -44,6 +44,7 @@ const MyChats = ({fetchAgain}) => {
   }, [fetchAgain]);
 
   return (
+    
     <Box
       display={{base: selectedChat? "none" : "flex", md: "flex"}}
       flexDir="column"
@@ -54,6 +55,8 @@ const MyChats = ({fetchAgain}) => {
       borderRadius="lg"
       borderWidth="1px"
     >
+
+      <div>test</div>
       <Box
         pb={3}
         px={3}

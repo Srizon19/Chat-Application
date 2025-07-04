@@ -1,7 +1,9 @@
 # Ignore environment variables and secrets
 .env
 *.env
-*.json
+
+# Ignore secret JSON file(s)
+Backend/chat-application-18320-firebase-adminsdk-fbsvc-5f2e572acf.json
 
 # Ignore node modules
 node_modules/
