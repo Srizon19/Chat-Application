@@ -46,7 +46,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
 
   const handleRemove = async(userToRemove)=>{
     // only admin can remove someone
-
+    console.log("user to remove: ", userToRemove);
     if(selectedChat.groupAdmin._id !== user._id && userToRemove._id === user._id){
       toast({
         title: "Only admin can remove someone!",
@@ -76,7 +76,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
       )
 
       console.log(data);
-      userToRemove._id === user._id? setSelectedChat() : selectedChat(data);
+      userToRemove._id === user._id? setSelectedChat() : setSelectedChat(data);
       setLoading(false);
       setFetchAgain(!fetchAgain);
     } catch (error) {
@@ -200,10 +200,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
       }
 
   }
-
-  const handleLeaveGroup = async()=>{
-    // only admin can remov
-  }
+  
 
   return (
     <>
@@ -215,7 +212,10 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
       />
 
 
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal isOpen={isOpen} onClose={()=>{
+        onClose()
+        setSearchResult([])
+      }} isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader
@@ -279,7 +279,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='red' mr={3} onClick={handleLeaveGroup}>
+            <Button colorScheme='red' mr={3} onClick={()=>{handleRemove(user)}}>
               Leave Group
             </Button>
           </ModalFooter>

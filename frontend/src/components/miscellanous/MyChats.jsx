@@ -56,7 +56,7 @@ const MyChats = ({fetchAgain}) => {
       borderWidth="1px"
     >
 
-      <div>test</div>
+      
       <Box
         pb={3}
         px={3}
