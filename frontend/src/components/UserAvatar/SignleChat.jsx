@@ -15,14 +15,48 @@ import ProfileModal from '../miscellanous/ProfileModal';
 import UpdateGroupChatModal from '../miscellanous/UpdateGroupChatModal';
 import axios from 'axios';
 import ScrollableChat from '../ScrollableChat';
+import io from 'socket.io-client'
+
+const ENDPOINT = "http://localhost:5000";
+var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState('');
+  const [socketConnected, setSocketConnected] = useState(false)
 
   const { user, selectedChat, setSelectedChat } = ChatState();
   const toast = useToast();
+
+
+  useEffect(()=>{
+    socket = io(ENDPOINT);
+    socket.emit("setup", user);
+
+    socket.on("connected", () => {
+      setSocketConnected(true);
+      console.log("Socket connected");
+    });
+
+  },[])
+
+  useEffect(() => {
+      if (!socket) return;
+
+      socket.on("message received", (newMessageReceived) => {
+        console.log("Message received in client:", newMessageReceived);
+
+        if (!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.chat._id) {
+          // show notification
+        } else {
+          setMessages((prev) => [...prev, newMessageReceived]);
+        }
+      });
+
+      return () => socket.off("message received");
+    }, []);
+
 
   const sendMessage = async (e) => {
     if (e.key === 'Enter' && newMessage.trim()) {
@@ -42,6 +76,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           config
         );
 
+        // socket config for sending message
+
+        socket.emit("new message", data);
+
         setNewMessage('');
         setMessages((prevMessages) => [...prevMessages, data]);
       } catch (error) {
@@ -57,6 +95,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     }
   };
 
+  
+
   const fetchMessages = async () => {
     if (!selectedChat) return;
 
@@ -71,6 +111,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       const { data } = await axios.get(`/backend/message/${selectedChat._id}`, config);
       setLoading(false);
       setMessages(data);
+
+      // connect to the socket room
+      console.log("Emitting join chat with ID:", selectedChat._id);
+      socket.emit('join chat', selectedChat._id);
+
     } catch (error) {
       toast({
         title: 'Error Occurred',
@@ -86,8 +131,12 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   useEffect(() => {
     if (selectedChat && user) {
       fetchMessages();
+      
+      selectedChatCompare = selectedChat;
     }
   }, [selectedChat, user]);
+
+  
 
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
