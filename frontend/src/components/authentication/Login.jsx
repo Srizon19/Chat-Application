@@ -24,7 +24,7 @@ const Login = () => {
   const toast = useToast();
   const navigate = useNavigate();
 
-  const {setUser} = ChatState();
+  const {user,setUser} = ChatState();
 
   const handleShowClick = () => setShowPass(!showPass);
 
@@ -66,9 +66,11 @@ const Login = () => {
       
 
       localStorage.setItem("userInfo", JSON.stringify(data));
-      console.log("logged in user data: ", data);
       setUser(data);
-      navigate("/chats");
+
+      
+      if(user) navigate("/chats");
+      
     } catch (err) {
       toast({
         title: "Error Occurred",

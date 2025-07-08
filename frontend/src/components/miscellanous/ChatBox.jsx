@@ -1,12 +1,11 @@
 import React from 'react'
 import { ChatState } from '../../Contexts/ChatProvider'
 import { Box } from '@chakra-ui/react';
-import SignleChat from '../UserAvatar/SignleChat';
+import SingleChat from '../UserAvatar/SignleChat';
 
 
 const ChatBox = ({fetchAgain,setFetchAgain}) => {
   const {selectedChat} = ChatState();
-  console.log("selected chat from chatbox: ", selectedChat)
   return (
     <Box 
       display={{base: selectedChat? "flex" : "none", md: "flex"}}
@@ -19,7 +18,7 @@ const ChatBox = ({fetchAgain,setFetchAgain}) => {
       borderRadius={"lg"}
       borderWidth={"1px"}
     >
-      <SignleChat fetchAgain={fetchAgain} setFetchAgain={setFetchAgain}></SignleChat>
+      <SingleChat fetchAgain={fetchAgain} setFetchAgain={setFetchAgain}></SingleChat>
       
     </Box>
   )

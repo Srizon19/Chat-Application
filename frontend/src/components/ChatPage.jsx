@@ -8,9 +8,6 @@ import { useState } from "react"
 const ChatPage = () => {
 
   const {user,selectedChat} = ChatState();
-  console.log("user data from context: ", user); 
-  console.log("selectedChat from context: ", selectedChat); 
-
   const [fetchAgain, setFetchAgain] = useState();
     
   return (
